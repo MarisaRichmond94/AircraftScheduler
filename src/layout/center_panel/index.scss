@@ -1,0 +1,12 @@
+@import 'global';
+
+#center-panel {
+  width: 50vw;
+
+  #rotation-container {
+    border-bottom: 1px solid $off-black;
+    margin: 0 $extra-large-margin;
+    padding: $extra-large-padding 0;
+    text-align: center;
+  }
+}

@@ -1,0 +1,26 @@
+@import 'global';
+
+.flight-path-entry {
+  background-color: $off-white;
+  border: 1px solid $off-white;
+  border-radius: 15px;
+  display: flex;
+  flex-direction: column;
+  margin: $large-margin 0;
+  padding: $large-padding;
+
+  &:hover { background-color: $light-grey; }
+  &.active { background-color: $grey; }
+
+  .identifier {
+    padding: $large-padding;
+    text-align: center;
+    text-decoration: underline;
+  }
+
+  .details-container {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: $extra-large-margin + 5px;
+  }
+}

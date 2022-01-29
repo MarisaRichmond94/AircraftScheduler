@@ -1,0 +1,8 @@
+@import 'global';
+
+#header {
+  @include centered-flex-box;
+  justify-content: center;
+  margin-bottom: $extra-large-margin;
+  margin-top: 5vh;
+}

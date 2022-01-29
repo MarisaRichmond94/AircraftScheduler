@@ -1,0 +1,17 @@
+@import 'global';
+
+#flight-path {
+  height: calc(90% - 109px);
+  overflow-x: auto;
+  width: 100%;
+
+  #empty-flight-path-prompt {
+    margin-top: 20%;
+    text-align: center;
+
+    svg {
+      font-size: $title-font-size;
+      margin-top: $extra-large-margin;
+    }
+  }
+}

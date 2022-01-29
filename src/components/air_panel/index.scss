@@ -1,0 +1,23 @@
+@import 'global';
+
+.air-panel-container {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: center;
+
+  .air-panel-header {
+    height: 40px;
+    padding: $extra-large-padding;
+  }
+
+  .air-panel-body {
+    background-color: $off-white;
+    border: 2px solid $off-black;
+    border-radius: 5px;
+    height: calc(100% - 80px);
+    overflow-x: auto;
+    width: 100%;
+  }
+}

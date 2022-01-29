@@ -1,0 +1,7 @@
+@import 'global';
+
+#right-panel {
+  height: calc(95vh - 55px); // 100vh - (space header takes up including margins)
+  padding: 1vw;
+  width: 25vw;
+}
