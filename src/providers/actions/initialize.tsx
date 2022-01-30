@@ -1,39 +1,25 @@
-import AircraftsApi from 'api/aircrafts';
-import FlightsApi from 'api/flights';
-import { AirCraft, AirCraftData, Flight } from 'types';
+import aircrafts from 'api/aircrafts.json';
+import flights from 'api/flights.json';
+import { AirCraft, Flight } from 'types';
 import { settings } from 'settings';
 
-export const initializeAircraftData = async (
+export const initializeAircrafts = (
   setAircrafts: (aircrafts: AirCraft[]) => void,
   setActiveAircraft: (aircraft: AirCraft) => void,
-  setAircraftDataMap: (aircraftDataMap: Record<string, AirCraftData>) => void,
 ) => {
-  const aircrafts = await AircraftsApi.get();
   setAircrafts(aircrafts);
   // default active aircraft to the first aircraft in the list
   if (aircrafts?.length >= 1) setActiveAircraft(aircrafts[0]);
-  setAircraftDataMap(_initializeAircraftDataMap(aircrafts));
 };
 
-export const initializeFlightData = async (
+export const initializeFlights = (
   setFlights: (flights: Flight[]) => void,
   setValidFlights: (flights: Flight[]) => void,
 ) => {
-  const flightData = await FlightsApi.get();
-  const cleanedFlights = _cleanFlightData(flightData);
+  const cleanedFlights = _cleanFlightData(flights);
   setFlights(cleanedFlights);
   setValidFlights(cleanedFlights);
 };
-
-// Populates a map with the default data for each aircraft in the given list of aircrafts
-const _initializeAircraftDataMap = (aircrafts: AirCraft[]): Record<string, AirCraftData> => {
-  const updatedAircraftDataMap = {} as Record<string, AirCraftData>;
-  for (let index = 0; index < aircrafts.length; index++) {
-    const aircraft = aircrafts[index];
-    updatedAircraftDataMap[aircraft.ident] = { flightPath: [], aircraftUsage: 0 };
-  }
-  return updatedAircraftDataMap;
-}
 
 /*
   Cleans any bad data from the given list of flights--any flights violating the midnight

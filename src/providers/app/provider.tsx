@@ -4,11 +4,10 @@ import { usePrevious } from 'hooks/usePrevious';
 import {
   addToFlightPath, removeFromFlightPath, updateFlightPathData,
   calculateValidFlights,
-  initializeAircraftData, initializeFlightData,
-  loadAirCraftData, storeAirCraftData,
+  initializeAircrafts, initializeFlights,
 } from 'providers/actions';
 import AppContext from 'providers/app/context';
-import { AirCraft, AirCraftData, Flight, UpdateFlightPathTypes } from 'types';
+import { AirCraft, Flight, UpdateFlightPathTypes } from 'types';
 
 const AppProvider = (props: object) => {
   // back-end state (should not be mutated because it is the source of truth)
@@ -16,9 +15,6 @@ const AppProvider = (props: object) => {
   const [flights, setFlights] = useState<undefined | Flight[]>();
   // front-end state (can be mutated using the back-end source of truth state above)
   const [activeAircraft, setActiveAircraft] = useState<undefined | AirCraft>();
-  const [aircraftDataMap, setAircraftDataMap] = (
-    useState<Record<string, AirCraftData>>({})
-  );
   const [activeFlight, setActiveFlight] = useState<undefined | Flight>();
   const [aircraftUsage, setAircraftUsage] = useState(0);
   const [earlierFlightsAvailable, setEarlierFlightsAvailable] = useState(false);
@@ -28,8 +24,8 @@ const AppProvider = (props: object) => {
 
   useEffect(() => {
     async function initialize() {
-      await initializeAircraftData(setAircrafts, setActiveAircraft, setAircraftDataMap);
-      await initializeFlightData(setFlights, setValidFlights);
+      initializeAircrafts(setAircrafts, setActiveAircraft);
+      initializeFlights(setFlights, setValidFlights);
     }
     initialize();
   }, []);
@@ -77,52 +73,20 @@ const AppProvider = (props: object) => {
     }
   }, [activeFlight, flightPath]);
 
-  const _resetActiveAircraftData = useCallback(() => {
-    setFlightPath([]);
-    setActiveFlight(undefined);
-    setAircraftUsage(0);
-    setEarlierFlightsAvailable(false);
-    setValidFlights(flights);
-  }, [flights]);
-
   const _resetFlightPath = (): void => {
     setEarlierFlightsAvailable(false);
     setAircraftUsage(0);
   };
 
-  const updateActiveAircraft = useCallback((nextActiveAircraft: AirCraft) => {
-    if (activeAircraft) {
-      // Store flight path and aircraft usage for the current active aircraft
-      const updatedAircraftDataMap = storeAirCraftData(
-        aircraftDataMap, activeAircraft, flightPath, aircraftUsage, setAircraftDataMap,
-      );
-      /* If there is already existing data for the next aircraft in the map, use that data;
-      Otherwise, reset state related to the active aircraft to the default settings. */
-      nextActiveAircraft && updatedAircraftDataMap[nextActiveAircraft.ident]
-        ? loadAirCraftData(
-          updatedAircraftDataMap[nextActiveAircraft.ident],
-          setAircraftUsage, setActiveFlight, setFlightPath,
-          recalculateValidFlights,
-        )
-        : _resetActiveAircraftData();
-    }
-    setActiveAircraft(nextActiveAircraft);
-  }, [
-    activeAircraft, aircraftDataMap, aircraftUsage, flightPath, // variable dependencies
-    recalculateValidFlights, _resetActiveAircraftData, // function dependencies
-  ]);
-
   const value = {
     activeAircraft,
     activeFlight,
     aircrafts,
-    aircraftDataMap,
     aircraftUsage,
     earlierFlightsAvailable,
     flightPath,
     validFlights,
     setActiveFlight,
-    updateActiveAircraft,
     updateFlightPath,
   };
 

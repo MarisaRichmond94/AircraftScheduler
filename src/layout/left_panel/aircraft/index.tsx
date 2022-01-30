@@ -8,17 +8,16 @@ type AirCraftItemProps = {
   aircraft: AirCraft,
   isActive: boolean,
   usage: number,
-  updateActiveAircraft: (aircraft: AirCraft) => void,
 };
 
 const AirCraftItem = (props: AirCraftItemProps): ReactElement => {
-  const { aircraft, isActive, usage, updateActiveAircraft } = props;
+  const { aircraft, isActive, usage } = props;
   const { ident } = aircraft;
 
   const containerClasses = isActive ? 'active aircraft-item' : 'aircraft-item';
 
   return (
-    <div className={containerClasses} onClick={() => updateActiveAircraft(aircraft)}>
+    <div className={containerClasses}>
       <div className='identifier header-text'>
         {ident}
       </div>

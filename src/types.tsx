@@ -15,11 +15,6 @@ export interface Flight {
   readableDeparture: string,
 };
 
-export interface AirCraftData {
-  flightPath: Flight[],
-  aircraftUsage: number,
-};
-
 export enum UpdateFlightPathTypes {
   add = 'add',
   remove = 'remove',
