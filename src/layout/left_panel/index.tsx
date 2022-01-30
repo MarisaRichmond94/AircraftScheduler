@@ -39,6 +39,6 @@ function LeftPanel() {
       }
     </div>
   );
-}
+};
 
 export default LeftPanel;

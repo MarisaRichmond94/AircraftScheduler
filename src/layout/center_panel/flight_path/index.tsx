@@ -9,7 +9,7 @@ import { useApp } from 'providers/app';
 
 const FlightPath = (): ReactElement => {
   const { activeFlight, flightPath } = useApp(); // provider variables
-  const { removeFromFlightPath, setActiveFlight } = useApp(); // provider functions
+  const { setActiveFlight, updateFlightPath } = useApp(); // provider functions
 
   const populateFlightPathEntries = (): ReactElement[] => {
     if (flightPath.length) {
@@ -22,7 +22,7 @@ const FlightPath = (): ReactElement => {
               entry={entry}
               entryIndex={index}
               isActiveEntry={!!(activeFlight && activeFlight.ident === entry.ident)}
-              removeFromFlightPath={removeFromFlightPath}
+              updateFlightPath={updateFlightPath}
               setActiveFlight={setActiveFlight}
               totalEntries={flightPath.length}
             />
@@ -30,7 +30,7 @@ const FlightPath = (): ReactElement => {
         }
       );
       return allEntries;
-    }
+    };
 
     return [];
   };

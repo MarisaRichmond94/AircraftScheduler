@@ -12,7 +12,7 @@ function Header() {
   const activeDay = moment.utc().add(dayIncrement, 'days').format('DD MMMM YYYY');
 
   const updateDayIncrement = (nextDayIncrement: number): void => {
-    // @TODO - save data on date change and clear state
+    // @TODO - sava current data and reset state for new day's flight paths
     setDayIncrement(nextDayIncrement);
   };
 
@@ -29,11 +29,12 @@ function Header() {
       </div>
       <AirButton
         classNames='thick header-text icon-button off-black day-nav-button'
+        isDisabled={true}
         onClick={() => updateDayIncrement(dayIncrement + 1)}
         textBlock={<MdArrowForwardIos />}
       />
     </div>
   );
-}
+};
 
 export default Header;

@@ -11,19 +11,19 @@
   padding: $large-padding;
   width: 100%;
 
-  &:hover { background-color: $light-grey; }
-  &.active { background-color: $grey; }
+  &:hover { background-color: $light-grey; };
+  &.active { background-color: $grey; };
   &:disabled {
     cursor: not-allowed;
-    #add-start-entry-button { cursor: not-allowed; }
-  }
+    #add-start-entry-button { cursor: not-allowed; };
+  };
 
   #add-start-entry-button {
     cursor: pointer;
     margin: auto;
 
     div {
-      &:first-child { margin-bottom: $large-margin; }
-    }
-  }
-}
+      &:first-child { margin-bottom: $large-margin; };
+    };
+  };
+};

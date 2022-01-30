@@ -15,12 +15,9 @@ type AirPanelProps = {
 };
 
 const AirPanel = (props: AirPanelProps): ReactElement => {
-  // props
   const { contents, emptyMessage, header, id } = props;
-  // local state
   const [resultsCount, setResultsCount] = useState(0);
   const prevContents = usePrevious(contents);
-  // derived state
   const emptyContents = (
     <div className='empty-contents paragragh-text'>
       {emptyMessage || 'No data available to display'}

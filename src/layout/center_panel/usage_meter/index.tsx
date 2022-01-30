@@ -2,6 +2,7 @@ import './index.scss';
 
 import { ReactElement } from 'react';
 
+import UsageEntry from 'layout/center_panel/usage_meter/entry';
 import { useApp } from 'providers/app';
 import { determinePercentageOfWhole } from 'utils/determinePercentageOfWhole';
 import { settings } from 'settings';
@@ -14,8 +15,8 @@ const UsageMeter = (): ReactElement => {
       const usageDetails = [
         <UsageEntry
           key='initial-idle-usage'
-          endInSecs={0}
-          startInSecs={flightPath[0].departureTime}
+          endInSecs={flightPath[0].departureTime}
+          startInSecs={0}
           type='idle'
         />
       ];
@@ -26,8 +27,8 @@ const UsageMeter = (): ReactElement => {
         usageDetails.push(
           <UsageEntry
             key={`${ident}-active-usage`}
-            endInSecs={departureTime}
-            startInSecs={arrivalTime}
+            endInSecs={arrivalTime}
+            startInSecs={departureTime}
             type='active'
           />
         );
@@ -39,8 +40,8 @@ const UsageMeter = (): ReactElement => {
         usageDetails.push(
           <UsageEntry
             key={`${ident}-downtime-usage`}
-            endInSecs={arrivalTime}
-            startInSecs={nextEndTimeInSecs}
+            endInSecs={nextEndTimeInSecs}
+            startInSecs={arrivalTime}
             type='turn-around'
           />
         );
@@ -49,8 +50,8 @@ const UsageMeter = (): ReactElement => {
       usageDetails.push(
         <UsageEntry
           key='eod-idle-usage'
-          endInSecs={nextEndTimeInSecs || 0}
-          startInSecs={86400}
+          endInSecs={86400}
+          startInSecs={nextEndTimeInSecs || 0}
           type='idle'
         />
       );
@@ -58,7 +59,14 @@ const UsageMeter = (): ReactElement => {
       return usageDetails;
     }
 
-    return <div className='usage idle-time' style={{ width: '100%' }}></div>;
+    return (
+      <UsageEntry
+        key='eod-idle-usage'
+        endInSecs={86400}
+        startInSecs={0}
+        type='idle'
+      />
+    );
   };
 
   return (
@@ -76,19 +84,6 @@ const UsageMeter = (): ReactElement => {
       </div>
     </div>
   );
-};
-
-type UsageEntryProps = {
-  endInSecs: number,
-  startInSecs: number,
-  type: string,
-};
-
-const UsageEntry = (props: UsageEntryProps): ReactElement => {
-  const { endInSecs, startInSecs, type } = props;
-  const percentage = Math.round(determinePercentageOfWhole(startInSecs, endInSecs));
-
-  return <div className={`usage ${type}-time`} style={{ width: `${percentage}%`}}></div>;
 };
 
 export default UsageMeter;

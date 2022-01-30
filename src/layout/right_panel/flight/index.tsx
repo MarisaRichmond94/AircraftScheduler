@@ -2,19 +2,19 @@ import './index.scss';
 
 import { ReactElement } from 'react';
 
-import { Flight } from 'types';
+import { Flight, UpdateFlightPathTypes } from 'types';
 
 type FlightItemProps = {
-  addToFlightPath: (flight: Flight) => void,
   flight: Flight,
+  updateFlightPath: (flight: Flight, type: UpdateFlightPathTypes) => void,
 };
 
 const FlightItem = (props: FlightItemProps): ReactElement => {
-  const { addToFlightPath, flight } = props;
+  const { flight, updateFlightPath } = props;
   const { destination, ident, origin, readableArrival, readableDeparture } = flight;
 
   return (
-    <div className='flight-item' onClick={() => addToFlightPath(flight)}>
+    <div className='flight-item' onClick={() => updateFlightPath(flight, UpdateFlightPathTypes.add)}>
       <div className='identifier header-text'>
         {ident}
       </div>

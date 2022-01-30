@@ -4,3 +4,13 @@
   display: flex;
   height: calc(95vh - 55px);
 }
+
+#fetching-data {
+  @include centered-flex-box;
+  flex-direction: column;
+
+  .air-loader { margin-top: 20vh; }
+  #fetching-text {
+    margin-top: -5vh;
+  }
+}

@@ -9,19 +9,8 @@
   #timeline {
     display: flex;
     justify-content: space-between;
-  }
+  };
 
-  hr { margin: 2px 0 0 0; }
-
-  #usage-entity-container {
-    display: flex;
-
-    .usage {
-      height: 25px;
-
-      &.idle-time { background-color: $light-grey; }
-      &.active-time { background-color: $primary-green; }
-      &.turn-around-time { background-color: $primary-orange; }
-    }
-  }
-}
+  hr { margin: 2px 0 0 0; };
+  #usage-entity-container { display: flex; };
+};

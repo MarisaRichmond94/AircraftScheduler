@@ -1,0 +1,9 @@
+@import 'global';
+
+.usage {
+  height: 25px;
+
+  &.idle-time { background-color: $light-grey; }
+  &.active-time { background-color: $primary-green; }
+  &.turn-around-time { background-color: $primary-orange; }
+};

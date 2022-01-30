@@ -7,19 +7,19 @@
   flex-direction: column;
   padding: $large-padding;
 
-  &:last-child { border-bottom: none; }
-  &:hover { background-color: $light-grey; }
-  &.active { background-color: $secondary-blue }
+  &:last-child { border-bottom: none; };
+  &:hover { background-color: $light-grey; };
+  &.active { background-color: $secondary-blue };
 
   .identifier {
     padding: $large-padding;
     text-align: center;
     text-decoration: underline;
-  }
+  };
 
   .details-container {
     display: flex;
     justify-content: space-around;
     margin-bottom: $extra-large-margin + 5px;
-  }
-}
+  };
+};

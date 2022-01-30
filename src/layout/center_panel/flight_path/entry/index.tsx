@@ -5,20 +5,20 @@ import { BsArrowRight } from 'react-icons/bs';
 import { FaRegTimesCircle } from 'react-icons/fa';
 
 import AirButton from 'components/air_button';
-import { Flight } from 'types';
+import { Flight, UpdateFlightPathTypes } from 'types';
 
 type FlightPathEntryProps = {
   entry: Flight,
   entryIndex: number,
   isActiveEntry: boolean,
   totalEntries: number,
-  removeFromFlightPath: (flightId: string) => void,
   setActiveFlight: (flight: Flight) => void,
+  updateFlightPath: (flight: Flight, type: UpdateFlightPathTypes) => void,
 };
 
 const FlightPathEntry = (props: FlightPathEntryProps): ReactElement => {
   const { entry, entryIndex, isActiveEntry, totalEntries } = props;
-  const { removeFromFlightPath, setActiveFlight } = props;
+  const { setActiveFlight, updateFlightPath } = props;
   const { destination, ident, origin, readableArrival, readableDeparture } = entry;
   // derived variables
   const canBeDeleted = entryIndex === 0 || entryIndex === totalEntries - 1;
@@ -63,7 +63,7 @@ const FlightPathEntry = (props: FlightPathEntryProps): ReactElement => {
             onClick={
               (event: React.MouseEvent<HTMLHeadingElement>) => {
                 event.stopPropagation();
-                removeFromFlightPath(ident);
+                updateFlightPath(entry, UpdateFlightPathTypes.remove);
               }
             }
             textBlock={<FaRegTimesCircle />}

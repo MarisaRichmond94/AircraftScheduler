@@ -19,6 +19,6 @@ function CenterPanel() {
       <UsageMeter />
     </div>
   );
-}
+};
 
 export default CenterPanel;

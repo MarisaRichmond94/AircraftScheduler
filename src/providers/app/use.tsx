@@ -8,6 +8,6 @@ const useApp = () => {
     throw new Error('useApp should only be used within the AppProvider.');
   }
   return context;
-}
+};
 
 export default useApp;

@@ -2,7 +2,6 @@ import axios from 'axios';
 
 import { settings } from 'settings';
 
-
 class BaseApi {
   route;
   url;
@@ -11,100 +10,25 @@ class BaseApi {
     this.route = route;
   };
 
-  async post(body: any) {
+  async get() {
     let response;
 
     try {
-      response = await axios.post(
+      response = await axios.get(
         this.url,
-        body,
         { headers: { 'Access-Control-Allow-Credentials': true } },
       );
     } catch (error) {
-      this.handleError(error, 'POST');
+      console.log('We should really handle this...')
     }
-
     return this.handleResponse(response);
-  };
-
-  async get(query = {}) {
-    let response;
-
-    try {
-      response = await axios.get(
-        `${this.url}?${this.buildQueryString(query)}`,
-        { headers: { 'Access-Control-Allow-Credentials': true } },
-      );
-    } catch (error) {
-      this.handleError(error, 'GET');
-    }
-
-    return this.handleResponse(response);
-  };
-
-  async getById(id: string) {
-    let response;
-
-    try {
-      response = await axios.get(
-        `${this.url}/${id}`,
-        { headers: { 'Access-Control-Allow-Credentials': true } },
-      );
-    } catch (error) {
-      this.handleError(error, 'GET by id');
-    }
-
-    return this.handleResponse(response);
-  };
-
-  async update(id: string, body: any) {
-    let response;
-
-    try {
-      response = await axios.patch(
-        `${this.url}/${id}`,
-        body,
-        { headers: { 'Access-Control-Allow-Credentials': true } },
-      );
-    } catch (error) {
-      this.handleError(error, 'PATCH');
-    }
-
-    return this.handleResponse(response);
-  };
-
-  async deleteById(id: string) {
-    let response;
-
-    try {
-      response = await axios.delete(
-        `${this.url}/${id}`,
-        { headers: { 'Access-Control-Allow-Credentials': true } },
-      );
-    } catch (error) {
-      this.handleError(error, 'DELETE by id');
-    }
-
-    return this.handleResponse(response);
-  };
-
-  buildQueryString = (query: any) => {
-    const queryString = Object.keys(query).reduce((accumulation, key) => {
-      return accumulation + `${key}=${encodeURIComponent(query[key])}&`;
-    }, '');
-    return (queryString.endsWith('&')) ? queryString.slice(0, -1) : queryString;
-  };
-
-  handleError = (error: any, method: string) => {
-    error.message = `${this.route} ${method} failed: ${error.message}`;
-    // TODO - route to error page
   };
 
   handleResponse = (response: any) => {
     if (response?.data) {
       return response.data;
     }
-    // TODO - handle error
+    console.log('This should definitely be handled...');
   };
 };
 

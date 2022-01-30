@@ -1,23 +1,33 @@
 import 'app.scss';
 
+import AirLoader from 'components/air_loader';
 import CenterPanel from 'layout/center_panel';
 import Header from 'layout/header';
 import LeftPanel from 'layout/left_panel';
 import RightPanel from 'layout/right_panel';
-import { AppProvider } from 'providers/app';
+import { useApp } from 'providers/app';
 
 function App() {
-  return (
-    <AppProvider>
-      <div id='app-container'>
-        <Header />
-        <div id='body-container'>
-          <LeftPanel />
-          <CenterPanel />
-          <RightPanel />
-        </div>
+  const { aircrafts, validFlights } = useApp();
+
+  if (!aircrafts || !validFlights) {
+    return (
+      <div id='fetching-data'>
+        <AirLoader color='#5BA1C5' type='cylon' />
+        <div className='thick header-text text-center' id='fetching-text'>Fetching Flight Info...</div>
       </div>
-    </AppProvider>
+    );
+  };
+
+  return (
+    <div id='app-container'>
+      <Header />
+      <div id='body-container'>
+        <LeftPanel />
+        <CenterPanel />
+        <RightPanel />
+      </div>
+    </div>
   );
 }
 

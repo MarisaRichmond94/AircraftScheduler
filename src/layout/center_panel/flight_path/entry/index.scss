@@ -9,12 +9,12 @@
   margin: $large-margin 0;
   padding: $large-padding;
 
-  &:hover { background-color: $light-grey; }
+  &:hover { background-color: $light-grey; };
   &.active {
     background-color: $grey;
     cursor: pointer;
-  }
-  &.disabled { cursor: not-allowed; }
+  };
+  &.disabled { cursor: not-allowed; };
 
   .entity-container {
     display: flex;
@@ -25,14 +25,14 @@
       padding: $large-padding;
       text-align: center;
       text-decoration: underline;
-    }
+    };
 
     .details-container {
       display: flex;
       justify-content: space-around;
       margin-bottom: $extra-large-margin + 5px;
-    }
-  }
+    };
+  };
 
   .action-container {
     align-self: center;
@@ -41,6 +41,6 @@
 
     .remove-entry-button {
       cursor: pointer;
-    }
-  }
-}
+    };
+  };
+};

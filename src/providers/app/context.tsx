@@ -1,6 +1,6 @@
 import { createContext } from 'react';
 
-import { AirCraft, AirCraftData, Flight } from 'types';
+import { AirCraft, AirCraftData, Flight, UpdateFlightPathTypes } from 'types';
 
 interface AppContextType {
   activeAircraft?: AirCraft,
@@ -11,10 +11,9 @@ interface AppContextType {
   earlierFlightsAvailable: boolean,
   flightPath: Flight[],
   validFlights?: Flight[],
-  addToFlightPath: (flight: Flight) => void,
-  removeFromFlightPath: (flightId: string) => void,
   setActiveFlight: (flight?: Flight) => void,
   updateActiveAircraft: (aircraft: AirCraft) => void,
+  updateFlightPath: (flight: Flight, type: UpdateFlightPathTypes) => void,
 }
 
 const AppContext = createContext<undefined | AppContextType>(undefined);

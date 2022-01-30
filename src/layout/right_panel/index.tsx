@@ -6,7 +6,7 @@ import FlightItem from 'layout/right_panel/flight';
 import { useApp } from 'providers/app';
 
 function RightPanel() {
-  const { addToFlightPath, validFlights } = useApp();
+  const { updateFlightPath, validFlights } = useApp();
 
   const populateFlights = () => {
     if (validFlights) {
@@ -14,7 +14,7 @@ function RightPanel() {
         flight => (
           <FlightItem
             key={`flight-${flight.ident}`}
-            addToFlightPath={addToFlightPath}
+            updateFlightPath={updateFlightPath}
             flight={flight}
           />
         )
@@ -22,7 +22,7 @@ function RightPanel() {
     }
 
     return [];
-  }
+  };
 
   return (
     <div id='right-panel'>
@@ -40,6 +40,6 @@ function RightPanel() {
       }
     </div>
   );
-}
+};
 
 export default RightPanel;

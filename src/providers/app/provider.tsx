@@ -1,18 +1,14 @@
-import produce from 'immer';
 import { useCallback, useEffect, useState } from 'react';
 
-import AircraftsApi from 'api/aircrafts';
-import FlightsApi from 'api/flights';
 import { usePrevious } from 'hooks/usePrevious';
 import {
+  addToFlightPath, removeFromFlightPath, updateFlightPathData,
   calculateValidFlights,
-  checkAircraftUsage,
-  checkEarlierFlightsAvailable,
-  cleanFlightData,
-  initializeAircraftDataMap,
-} from 'providers/app/actions';
+  initializeAircraftData, initializeFlightData,
+  loadAirCraftData, storeAirCraftData,
+} from 'providers/actions';
 import AppContext from 'providers/app/context';
-import { AirCraft, AirCraftData, Flight } from 'types';
+import { AirCraft, AirCraftData, Flight, UpdateFlightPathTypes } from 'types';
 
 const AppProvider = (props: object) => {
   // back-end state (should not be mutated because it is the source of truth)
@@ -23,43 +19,30 @@ const AppProvider = (props: object) => {
   const [aircraftDataMap, setAircraftDataMap] = (
     useState<Record<string, AirCraftData>>({})
   );
-  // state that should be updated/reset on active aircraft mutation
   const [activeFlight, setActiveFlight] = useState<undefined | Flight>();
   const [aircraftUsage, setAircraftUsage] = useState(0);
   const [earlierFlightsAvailable, setEarlierFlightsAvailable] = useState(false);
   const [flightPath, setFlightPath] = useState<Flight[]>([]);
   const [validFlights, setValidFlights] = useState<undefined | Flight[]>();
-  // derived variables
   const prevActiveFlightId = usePrevious(activeFlight?.ident);
 
-  // on mount useEffect populates back-end source of truth data
   useEffect(() => {
-    async function populateInitialData() {
-      const aircraftData = await AircraftsApi.get();
-      setAircrafts(aircraftData);
-      if (aircraftData?.length >= 1) setActiveAircraft(aircraftData[0]);
-      setAircraftDataMap(initializeAircraftDataMap(aircraftData));
-      const flightData = await FlightsApi.get();
-      const cleanedFlights = cleanFlightData(flightData);
-      setFlights(cleanedFlights);
-      setValidFlights(cleanedFlights);
+    async function initialize() {
+      await initializeAircraftData(setAircrafts, setActiveAircraft, setAircraftDataMap);
+      await initializeFlightData(setFlights, setValidFlights);
     }
-    populateInitialData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    initialize();
   }, []);
 
-  // any time the flight path is changed, we need to check if earlier flights are available
-  // and recalculate the usage percentage
+  /*
+    any time the flight path is changed, we need to either a.) reset the flight path data if the
+    updated flight path is empty or b.) update the data being calculated using the flight path,
+    such as the total aircraft usage and whether or not earlier flights are available
+  */
   useEffect(() => {
-    if (flightPath.length) {
-      const updatedEarlierFlightsAvail = checkEarlierFlightsAvailable(flightPath[0], flights);
-      setEarlierFlightsAvailable(updatedEarlierFlightsAvail);
-      const updatedAircraftUsage = checkAircraftUsage(flightPath);
-      setAircraftUsage(updatedAircraftUsage);
-    } else {
-      setEarlierFlightsAvailable(false);
-      setAircraftUsage(0);
-    }
+    flights && flightPath.length
+      ? updateFlightPathData(flightPath, flights, setEarlierFlightsAvailable, setAircraftUsage)
+      : _resetFlightPath();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [flightPath]);
 
@@ -82,35 +65,19 @@ const AppProvider = (props: object) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeFlight, prevActiveFlightId]);
 
-  const addToFlightPath = useCallback((nextFlight: Flight): void => {
-    const position = activeFlight
-      ? flightPath.findIndex(x => x.ident === activeFlight.ident) + 1
-      : 0;
-    if (position !== -1) {
-      const updatedFlightPath = produce<Flight[]>(flightPath, draft => {
-        draft.splice(position, 0, nextFlight);
-      });
-      setFlightPath(updatedFlightPath);
-      // set active flight to the last flight in the path
-      setActiveFlight(updatedFlightPath[updatedFlightPath.length - 1]);
+  const updateFlightPath = useCallback((flight: Flight, type: UpdateFlightPathTypes): void => {
+    switch (type) {
+      case UpdateFlightPathTypes.add:
+        addToFlightPath(flightPath, flight, setActiveFlight, setFlightPath, activeFlight);
+        break;
+      case UpdateFlightPathTypes.remove:
+      default:
+        removeFromFlightPath(flight.ident, flightPath, setActiveFlight, setFlightPath, activeFlight);
+        break;
     }
   }, [activeFlight, flightPath]);
 
-  const removeFromFlightPath = useCallback((flightId: string): void => {
-    const updatedFlightPath = produce<Flight[]>(flightPath, draft => {
-      return draft.filter(flight => flight.ident !== flightId);
-    });
-    setFlightPath(updatedFlightPath);
-    if (activeFlight && activeFlight.ident === flightId) {
-      // update the active flight if the deleted flight was the active flight
-      const nextActiveFlight = updatedFlightPath.length
-        ? updatedFlightPath[updatedFlightPath.length - 1] // set active flight to the last flight
-        : undefined; // set active flight to undefined if there are no flights in the path
-      setActiveFlight(nextActiveFlight);
-    }
-  }, [activeFlight, flightPath]);
-
-  const resetActiveAircraftData = useCallback(() => {
+  const _resetActiveAircraftData = useCallback(() => {
     setFlightPath([]);
     setActiveFlight(undefined);
     setAircraftUsage(0);
@@ -118,30 +85,31 @@ const AppProvider = (props: object) => {
     setValidFlights(flights);
   }, [flights]);
 
+  const _resetFlightPath = (): void => {
+    setEarlierFlightsAvailable(false);
+    setAircraftUsage(0);
+  };
+
   const updateActiveAircraft = useCallback((nextActiveAircraft: AirCraft) => {
     if (activeAircraft) {
-      const updatedAircraftToFlightPathMap = produce<Record<string, AirCraftData>>(
-        aircraftDataMap, draft => {
-          draft[activeAircraft.ident] = { flightPath, aircraftUsage };
-        }
+      // Store flight path and aircraft usage for the current active aircraft
+      const updatedAircraftDataMap = storeAirCraftData(
+        aircraftDataMap, activeAircraft, flightPath, aircraftUsage, setAircraftDataMap,
       );
-      setAircraftDataMap(updatedAircraftToFlightPathMap);
-
-      if (nextActiveAircraft && updatedAircraftToFlightPathMap[nextActiveAircraft.ident]) {
-        const nextAircraftData = updatedAircraftToFlightPathMap[nextActiveAircraft.ident];
-        setFlightPath(nextAircraftData.flightPath);
-        const nextActiveFlightIndex = nextAircraftData.flightPath.length - 1;
-        setActiveFlight(nextAircraftData.flightPath[nextActiveFlightIndex]);
-        setAircraftUsage(nextAircraftData.aircraftUsage);
-        recalculateValidFlights(nextAircraftData.flightPath, nextActiveFlightIndex);
-      } else {
-        resetActiveAircraftData();
-      }
-      setActiveAircraft(nextActiveAircraft);
+      /* If there is already existing data for the next aircraft in the map, use that data;
+      Otherwise, reset state related to the active aircraft to the default settings. */
+      nextActiveAircraft && updatedAircraftDataMap[nextActiveAircraft.ident]
+        ? loadAirCraftData(
+          updatedAircraftDataMap[nextActiveAircraft.ident],
+          setAircraftUsage, setActiveFlight, setFlightPath,
+          recalculateValidFlights,
+        )
+        : _resetActiveAircraftData();
     }
+    setActiveAircraft(nextActiveAircraft);
   }, [
     activeAircraft, aircraftDataMap, aircraftUsage, flightPath, // variable dependencies
-    recalculateValidFlights, resetActiveAircraftData, // function dependencies
+    recalculateValidFlights, _resetActiveAircraftData, // function dependencies
   ]);
 
   const value = {
@@ -153,10 +121,9 @@ const AppProvider = (props: object) => {
     earlierFlightsAvailable,
     flightPath,
     validFlights,
-    addToFlightPath,
-    removeFromFlightPath,
     setActiveFlight,
     updateActiveAircraft,
+    updateFlightPath,
   };
 
   return <AppContext.Provider value={value} {...props} />;

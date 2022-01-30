@@ -1,5 +1,4 @@
 import { ReactElement } from 'react';
-import { Button } from 'react-bootstrap';
 
 type AirButtonProps = {
   classNames?: string,
@@ -12,14 +11,14 @@ type AirButtonProps = {
 
 const AirButton = (props: AirButtonProps): ReactElement => {
   return (
-    <Button
+    <button
       className={`air-button${props.classNames ? ` ${props.classNames}` : ''}`}
       disabled={props.isDisabled || false}
       id={props.id}
       onClick={props.onClick}
     >
       {props.text || props.textBlock || ''}
-    </Button>
+    </button>
   );
 };
 

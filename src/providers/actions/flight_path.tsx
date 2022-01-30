@@ -1,6 +1,8 @@
 import produce from 'immer';
 
+import { checkEarlierFlightsAvailable } from 'providers/actions/flights';
 import { Flight } from 'types';
+import { determinePercentageOfWhole } from 'utils/determinePercentageOfWhole';
 
 export const addToFlightPath = (
   flightPath: Flight[],
@@ -40,4 +42,29 @@ export const removeFromFlightPath = (
       : undefined; // set active flight to undefined if there are no flights in the path
     setActiveFlight(nextActiveFlight);
   }
+};
+
+export const updateFlightPathData = (
+  flightPath: Flight[],
+  flights: Flight[],
+  setEarlierFlightsAvailable: (earlierFlightsAvailable: boolean) => void,
+  setAircraftUsage: (aircraftUsage: number) => void,
+): void => {
+  const updatedEarlierFlightsAvail = checkEarlierFlightsAvailable(flightPath[0], flights);
+  setEarlierFlightsAvailable(updatedEarlierFlightsAvail);
+  const updatedAircraftUsage = _checkAircraftUsage(flightPath);
+  setAircraftUsage(updatedAircraftUsage);
+};
+
+const _checkAircraftUsage = (flightPath?: Flight[]): number => {
+  if (flightPath?.length) {
+    let totalSecondsInFlightPath = 0;
+    for (let index = 0; index < flightPath.length; index++) {
+      const { arrivalTime: endInSecs, departureTime: startInSecs } = flightPath[index];
+      totalSecondsInFlightPath += determinePercentageOfWhole(startInSecs, endInSecs);
+    }
+    return Math.round(totalSecondsInFlightPath);
+  }
+
+  return 0;
 };
