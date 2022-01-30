@@ -5,6 +5,30 @@
       "type": "A320",
       "economySeats": 186,
       "base": "EGKK"
+    },
+    {
+      "ident": "QWERTY",
+      "type": "A320",
+      "economySeats": 186,
+      "base": "REGG"
+    },
+    {
+      "ident": "MERK",
+      "type": "A320",
+      "economySeats": 186,
+      "base": "CERT"
+    },
+    {
+      "ident": "CRAM",
+      "type": "A320",
+      "economySeats": 186,
+      "base": "XRTZ"
+    },
+    {
+      "ident": "PRXY",
+      "type": "A320",
+      "economySeats": 186,
+      "base": "LARK"
     }
   ],
   "flights": [
@@ -576,6 +600,24 @@
       "destination": "EGCC"
     },
     {
+      "ident": "MIDNIGHT_DEPARTURE",
+      "departureTime": 0,
+      "arrivalTime": 25500,
+      "readableDeparture": "24:00",
+      "readableArrival": "07:05",
+      "origin": "LIPZ",
+      "destination": "EGCC"
+    },
+    {
+      "ident": "MIDNIGHT_ARRIVAL",
+      "departureTime": 25500,
+      "arrivalTime": 86400,
+      "readableDeparture": "07:05",
+      "readableArrival": "24:00",
+      "origin": "LIPZ",
+      "destination": "EGCC"
+    },
+    {
       "ident": "AS1327",
       "departureTime": 18600,
       "arrivalTime": 23400,
@@ -583,6 +625,15 @@
       "readableArrival": "06:30",
       "origin": "LSGG",
       "destination": "LIPZ"
+    },
+    {
+      "ident": "AS1573",
+      "departureTime": 24000,
+      "arrivalTime": 28500,
+      "readableDeparture": "06:40",
+      "readableArrival": "07:55",
+      "origin": "LIPZ",
+      "destination": "EGAA"
     },
     {
       "ident": "AS1328",
@@ -683,5 +734,6 @@
       "origin": "LSGG",
       "destination": "EHAM"
     }
-  ]
+  ],
+  "flightPaths": []
 }

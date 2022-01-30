@@ -1,0 +1,27 @@
+@import 'global';
+
+#usage-meter {
+  background-color: $off-black;
+  height: calc(8% - 85px);
+  margin-top: $extra-large-margin;
+  width: 100%;
+
+  #timeline {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  hr { margin: 2px 0 0 0; }
+
+  #usage-entity-container {
+    display: flex;
+
+    .usage {
+      height: 25px;
+
+      &.idle-time { background-color: $light-grey; }
+      &.active-time { background-color: $primary-green; }
+      &.turn-around-time { background-color: $primary-orange; }
+    }
+  }
+}

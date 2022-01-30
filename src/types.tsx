@@ -3,7 +3,7 @@ export interface AirCraft {
   economySeats: number,
   ident: string,
   type: string,
-}
+};
 
 export interface Flight {
   arrivalTime: number,
@@ -13,4 +13,14 @@ export interface Flight {
   origin: string,
   readableArrival: string,
   readableDeparture: string,
-}
+};
+
+export interface AirCraftData {
+  flightPath: Flight[],
+  aircraftUsage: number,
+};
+
+export enum UpdateFlightPathTypes {
+  add = 'add',
+  remove = 'remove',
+};

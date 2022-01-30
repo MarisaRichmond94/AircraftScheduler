@@ -5,22 +5,42 @@
   border: 1px solid $off-white;
   border-radius: 15px;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   margin: $large-margin 0;
   padding: $large-padding;
 
   &:hover { background-color: $light-grey; }
-  &.active { background-color: $grey; }
+  &.active {
+    background-color: $grey;
+    cursor: pointer;
+  }
+  &.disabled { cursor: not-allowed; }
 
-  .identifier {
-    padding: $large-padding;
-    text-align: center;
-    text-decoration: underline;
+  .entity-container {
+    display: flex;
+    flex-direction: column;
+    width: calc(100% - 40px);
+
+    .identifier {
+      padding: $large-padding;
+      text-align: center;
+      text-decoration: underline;
+    }
+
+    .details-container {
+      display: flex;
+      justify-content: space-around;
+      margin-bottom: $extra-large-margin + 5px;
+    }
   }
 
-  .details-container {
-    display: flex;
-    justify-content: space-around;
-    margin-bottom: $extra-large-margin + 5px;
+  .action-container {
+    align-self: center;
+    margin-left: auto;
+    width: 40px;
+
+    .remove-entry-button {
+      cursor: pointer;
+    }
   }
 }

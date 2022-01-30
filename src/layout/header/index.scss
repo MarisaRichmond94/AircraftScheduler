@@ -4,5 +4,14 @@
   @include centered-flex-box;
   justify-content: center;
   margin-bottom: $extra-large-margin;
-  margin-top: 5vh;
+  padding-top: 5vh;
+
+  .day-nav-button {
+    cursor: pointer;
+
+    &:disabled {
+      color: $light-grey;
+      cursor: not-allowed;
+    }
+  }
 }

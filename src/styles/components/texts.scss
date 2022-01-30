@@ -1,5 +1,4 @@
 @mixin prevent-highlight {
-  cursor: default;
   user-select: none;
 }
 
@@ -11,19 +10,9 @@
 .sub-title-text { font-size: $sub-title-font-size; }
 .small-title-text { font-size: $small-title-font-size; }
 .large-header-text { font-size: $large-header-font-size; }
-.header-text { font-size: $header-font-size; }
+.header-text {font-size: $header-font-size; }
 .sub-header-text { font-size: $sub-header-font-size; }
 .paragraph-text { font-size: $paragraph-font-size; }
-
-.text {
-  &.white { color: $white; }
-  &.off-white { color: $off-white; }
-  &.off-black { color: $off-black; }
-  &.medium-grey { color: $medium-grey; }
-  &.primary-red { color: $primary-red; }
-  &.primary-green { color: $primary-green; }
-  &.transparent { color: transparent !important }
-}
 
 // desktop view
 @media (min-width: 1024px) {

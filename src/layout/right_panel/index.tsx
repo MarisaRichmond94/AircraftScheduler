@@ -28,7 +28,14 @@ function RightPanel() {
     <div id='right-panel'>
       {
         validFlights
-        ? <AirPanel header='Flights' id='flights-panel' contents={populateFlights()} />
+        ? (
+          <AirPanel
+            header='Flights'
+            id='flights-panel'
+            contents={populateFlights()}
+            emptyMessage='No available flights'
+          />
+        )
         : <AirLoader />
       }
     </div>

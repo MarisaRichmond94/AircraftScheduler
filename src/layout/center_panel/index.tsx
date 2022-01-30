@@ -1,6 +1,7 @@
 import './index.scss';
 
 import FlightPath from 'layout/center_panel/flight_path';
+import UsageMeter from 'layout/center_panel/usage_meter';
 import { useApp } from 'providers/app';
 
 function CenterPanel() {
@@ -15,6 +16,7 @@ function CenterPanel() {
         </div>
       }
       <FlightPath />
+      <UsageMeter />
     </div>
   );
 }

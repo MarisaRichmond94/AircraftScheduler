@@ -1,9 +1,9 @@
 @import 'global';
 
 .aircraft-item {
-  align-items: center;
+  @include centered-flex-box;
   border-bottom: 1px solid $off-black;
-  display: flex;
+  cursor: pointer;
   flex-direction: column;
   padding: $large-padding;
 

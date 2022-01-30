@@ -5,7 +5,7 @@ type AirButtonProps = {
   classNames?: string,
   id?: string,
   isDisabled?: boolean,
-  onClick: (e: object) => void,
+  onClick: (e: any) => void,
   text?: string,
   textBlock?: ReactElement,
 };

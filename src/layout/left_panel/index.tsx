@@ -6,18 +6,24 @@ import AirCraftItem from 'layout/left_panel/aircraft';
 import { useApp } from 'providers/app';
 
 function LeftPanel() {
-  const { activeAircraft, aircrafts } = useApp();
+  const { activeAircraft, aircrafts, aircraftDataMap, aircraftUsage } = useApp() // provider variables
+  const { updateActiveAircraft } = useApp(); // provider functions
 
   const populateAircrafts = () => {
     if (aircrafts) {
       return aircrafts.map(
-        aircraft => (
-          <AirCraftItem
-            key={`aircraft-${aircraft.ident}`}
-            aircraft={aircraft}
-            isActive={!!(activeAircraft && aircraft.ident === activeAircraft.ident)}
-          />
-        )
+        aircraft => {
+          const isActive = !!(activeAircraft && aircraft.ident === activeAircraft.ident);
+          return (
+            <AirCraftItem
+              key={`aircraft-${aircraft.ident}`}
+              aircraft={aircraft}
+              isActive={isActive}
+              updateActiveAircraft={updateActiveAircraft}
+              usage={isActive ? aircraftUsage : aircraftDataMap[aircraft.ident]?.aircraftUsage}
+            />
+          )
+      }
       );
     }
 

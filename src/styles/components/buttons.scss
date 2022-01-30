@@ -11,129 +11,12 @@ button,
   background-color: transparent !important;
   padding: $small-padding $medium-padding;
 
-  &.grey {
-    color: $grey;
-    &:hover { color: $light-grey; }
-  }
-
   &.off-black {
     color: $off-black;
 
     &.active {
       border-radius: 0;
       padding-bottom: 0;
-    }
-  }
-
-  &.primary-red {
-    color: $primary-red;
-    &:hover { color: $secondary-red; }
-  }
-
-  &.primary-green {
-    color: $primary-green;
-    &:hover { color: $secondary-green; }
-  }
-}
-
-.icon {
-  &.medium-grey { color: $grey; }
-  &.primary-red { color: $primary-red; }
-  &.primary-green { color: $primary-green; }
-}
-
-.air-button {
-  &.primary-blue {
-    background-color: $primary-blue;
-
-    &:hover {
-      background-color: $secondary-blue;
-      color: $off-white;
-    }
-
-    &:active,
-    &:focus { background-color: $primary-blue; }
-  }
-
-  &.secondary-blue {
-    background-color: $secondary-blue;
-
-    &:hover {
-      background-color: $grey;
-      color: $off-white;
-    }
-
-    &:active,
-    &:focus { background-color: $secondary-blue; }
-    &:disabled { background-color: $grey; }
-  }
-
-  &.medium-grey {
-    background-color: $medium-grey;
-
-    &:hover {
-      background-color: $dark-grey;
-      color: $off-white;
-    }
-  }
-
-  &.primary-red {
-    background-color: $primary-red;
-
-    &:hover {
-      background-color: $secondary-red;
-      color: $off-white;
-    }
-
-    &:active,
-    &:focus { background-color: $grey; }
-  }
-
-  &.primary-green {
-    background-color: $primary-green;
-
-    &:hover {
-      background-color: $secondary-green;
-      color: $off-white;
-    }
-
-    &:active,
-    &:focus { background-color: $grey; }
-  }
-
-  &.light-background { color: $off-black; }
-  &.dark-background { color: $white; }
-
-  &.underline-text {
-    background-color: transparent !important;
-    border-bottom: 3px solid transparent;
-    border-radius: 0;
-    margin-right: $large-margin;
-    padding: 0;
-
-    &.off-white {
-      &.active { border-bottom: 3px solid $off-white; }
-    }
-
-    &.off-black {
-      color: $off-black;
-      &:hover { color: $dark-grey; }
-      &.active { border-bottom: 3px solid $primary-blue; }
-    }
-
-    &.primary-blue {
-      &.active { border-bottom: 3px solid $primary-blue; }
-    }
-  }
-
-  &.text {
-    background-color: transparent !important;
-    border-radius: 0;
-    padding: 0;
-
-    &.primary-blue {
-      color: $primary-blue;
-      &:hover { color: $secondary-blue; }
     }
   }
 }

@@ -1,0 +1,29 @@
+@import 'global';
+
+#add-start-entry-button-container {
+  background-color: $off-white;
+  border: 1px solid $off-white;
+  border-radius: 15px;
+  display: flex;
+  flex-direction: row;
+  height: 156px;
+  margin: $large-margin 0;
+  padding: $large-padding;
+  width: 100%;
+
+  &:hover { background-color: $light-grey; }
+  &.active { background-color: $grey; }
+  &:disabled {
+    cursor: not-allowed;
+    #add-start-entry-button { cursor: not-allowed; }
+  }
+
+  #add-start-entry-button {
+    cursor: pointer;
+    margin: auto;
+
+    div {
+      &:first-child { margin-bottom: $large-margin; }
+    }
+  }
+}
