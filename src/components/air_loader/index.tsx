@@ -14,6 +14,7 @@ const AirLoader = (props: AirLoaderProps): ReactElement => (
   <ReactLoading
     className='air-loader'
     color={props.color || '#083F89'}
+    data-testid='air-loader'
     height={props.height || '10%'}
     type={props.type || 'cylon'}
     width={props.width || '20%'}

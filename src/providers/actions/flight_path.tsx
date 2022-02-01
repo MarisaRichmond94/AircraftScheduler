@@ -11,16 +11,16 @@ export const addToFlightPath = (
   setFlightPath: (flightPath: Flight[]) => void,
   activeFlight?: Flight,
 ): void => {
-  const position = activeFlight
-    ? flightPath.findIndex(x => x.ident === activeFlight.ident) + 1
-    : 0;
+  const position = activeFlight ? flightPath.findIndex(x => x.ident === activeFlight.ident) : 0;
   if (position !== -1) {
-    const updatedFlightPath = produce<Flight[]>(flightPath, draft => {
-      draft.splice(position, 0, nextFlight);
-    });
+    const updatedFlightPath = activeFlight
+      ? produce<Flight[]>(flightPath, draft => { draft.splice(position + 1, 0, nextFlight); })
+      : [nextFlight];
     setFlightPath(updatedFlightPath);
     // set active flight to the last flight in the path
     setActiveFlight(updatedFlightPath[updatedFlightPath.length - 1]);
+  } else {
+    throw Error('activeFlight was not found in flight path');
   }
 };
 
@@ -56,7 +56,7 @@ export const updateFlightPathData = (
   setAircraftUsage(updatedAircraftUsage);
 };
 
-const _checkAircraftUsage = (flightPath?: Flight[]): number => {
+export const _checkAircraftUsage = (flightPath?: Flight[]): number => {
   if (flightPath?.length) {
     let totalSecondsInFlightPath = 0;
     for (let index = 0; index < flightPath.length; index++) {

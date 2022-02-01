@@ -1,6 +1,6 @@
 import './index.scss';
 
-import { ReactElement, useCallback, useEffect, useState } from 'react';
+import { ReactElement, useEffect, useLayoutEffect, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
 import AirLoader from 'components/air_loader';
@@ -8,7 +8,7 @@ import { usePrevious } from 'hooks/usePrevious';
 import { settings } from 'settings';
 
 type AirPanelProps = {
-  contents: object[],
+  contents: ReactElement[],
   emptyMessage?: string,
   header: string,
   id: string,
@@ -16,7 +16,9 @@ type AirPanelProps = {
 
 const AirPanel = (props: AirPanelProps): ReactElement => {
   const { contents, emptyMessage, header, id } = props;
-  const [resultsCount, setResultsCount] = useState(0);
+  const element = document.getElementById(`${id}-body`);
+  const [results, setResults] = useState<ReactElement[]>([]);
+  const [panelHeight, setPanelHeight] = useState(element ? `${element.offsetHeight}px` : '500px');
   const prevContents = usePrevious(contents);
   const emptyContents = (
     <div className='empty-contents paragragh-text'>
@@ -24,42 +26,52 @@ const AirPanel = (props: AirPanelProps): ReactElement => {
     </div>
   );
 
+  useLayoutEffect(() => {
+    function updatePanelHeight() {
+      const element = document.getElementById(`${id}-body`);
+      setPanelHeight(element ? `${element.offsetHeight}px` : '500px');
+    }
+    window.addEventListener('resize', updatePanelHeight);
+    updatePanelHeight();
+    return () => window.removeEventListener('resize', updatePanelHeight);
+  }, [id]);
+
   useEffect(() => {
-    if (!prevContents && contents?.length) {
-      setResultsCount(
+    if ((!prevContents && contents?.length) || prevContents !== contents) {
+      setResults(
         contents.length >= settings.MIN_RESULTS_PER_LOAD
-          ? settings.MIN_RESULTS_PER_LOAD
-          : contents.length
+          ? contents.slice(0, settings.MIN_RESULTS_PER_LOAD)
+          : contents
       );
     }
   }, [contents, prevContents]);
 
-  const getMoreContents = useCallback((): void => {
-    const nextResultsCount = resultsCount + settings.MIN_RESULTS_PER_LOAD;
-    setResultsCount(
+  const getMoreContents = (): void => {
+    const nextResultsCount = results.length + settings.MIN_RESULTS_PER_LOAD;
+    setResults(
       nextResultsCount <= contents.length
-        ? nextResultsCount
-        : contents.length
+        ? contents.slice(0, nextResultsCount)
+        : contents
     );
-  }, [contents?.length, resultsCount]);
+  };
 
   return (
-    <div className='air-panel-container' id={id}>
+    <div className='air-panel-container' id={id} data-testid='air-panel'>
       <div className='air-panel-header'>
         <b>{header}</b>
       </div>
-      <div className='air-panel-body'>
+      <div className='air-panel-body' id={`${id}-body`}>
         {
-          contents.length
+          results?.length
             ? (
               <InfiniteScroll
-                dataLength={resultsCount}
+                dataLength={results.length}
                 next={getMoreContents}
-                hasMore={resultsCount !== contents.length}
+                hasMore={results.length < contents.length}
                 loader={<AirLoader color='#5BA1C5' height='5%' type='cylon'/>}
-                scrollableTarget='air-panel-body'
+                height={panelHeight}
               >
-                {contents}
+                {results}
               </InfiniteScroll>
             )
             : emptyContents

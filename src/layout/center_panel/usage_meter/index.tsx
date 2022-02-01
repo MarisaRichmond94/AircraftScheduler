@@ -4,7 +4,6 @@ import { ReactElement } from 'react';
 
 import UsageEntry from 'layout/center_panel/usage_meter/entry';
 import { useApp } from 'providers/app';
-import { determinePercentageOfWhole } from 'utils/determinePercentageOfWhole';
 import { settings } from 'settings';
 
 const UsageMeter = (): ReactElement => {

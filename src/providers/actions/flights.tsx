@@ -50,7 +50,7 @@ export const checkEarlierFlightsAvailable = (
   return false;
 };
 
-const _filterFlights = (
+export const _filterFlights = (
   flights?: Flight[],
   start?: FlightFilter,
   end?: FlightFilter,
