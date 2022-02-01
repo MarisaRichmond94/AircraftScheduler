@@ -4,11 +4,10 @@
 3) Run `npm start` to start up the application
 
 ## Simplifications
-The following are aspects of this project I purposely didn't go super far into for simplicity but
-would have spent more time on in an enterprise project:
-1) Error handling (I just did a basic error boundary and threw some errors where they occurred)
-2) Testing (I just did some component tests and util/action tests to demonstrate my work)
-3) Using tools like react-query for fetching data that won't often change (e.g. the list of flights
-  and aircrafts)
-4) Integrating with the given api. Due to the simplistic nature of this project, I didn't see the
-  need to actually integrate with any kind of back-end, even just a simple API
+The following are aspects of this project I purposely simplified:
+1) Error handling
+  - I just did a basic error boundary
+  - I threw some errors in functions where the given data wasn't expected
+2) Testing (normally, I would want to do integration testing as well w/ a tool like Cypress.io)
+  - I wrote a couple component tests (app, root index, and reusable components)
+  - I tested all utils and provider actions
