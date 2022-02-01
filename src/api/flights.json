@@ -576,15 +576,6 @@
     "destination": "EGCC"
   },
   {
-    "ident": "MIDNIGHT_ARRIVAL",
-    "departureTime": 25500,
-    "arrivalTime": 86400,
-    "readableDeparture": "07:05",
-    "readableArrival": "24:00",
-    "origin": "LIPZ",
-    "destination": "EGCC"
-  },
-  {
     "ident": "AS1327",
     "departureTime": 18600,
     "arrivalTime": 23400,

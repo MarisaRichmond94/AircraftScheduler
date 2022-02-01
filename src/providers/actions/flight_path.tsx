@@ -2,7 +2,7 @@ import produce from 'immer';
 
 import { checkEarlierFlightsAvailable } from 'providers/actions/flights';
 import { Flight } from 'types';
-import { determinePercentageOfWhole } from 'utils/determinePercentageOfWhole';
+import { checkAircraftUsage } from 'utils/checkAircraftUsage';
 
 export const addToFlightPath = (
   flightPath: Flight[],
@@ -52,19 +52,6 @@ export const updateFlightPathData = (
 ): void => {
   const updatedEarlierFlightsAvail = checkEarlierFlightsAvailable(flightPath[0], flights);
   setEarlierFlightsAvailable(updatedEarlierFlightsAvail);
-  const updatedAircraftUsage = _checkAircraftUsage(flightPath);
+  const updatedAircraftUsage = checkAircraftUsage(flightPath);
   setAircraftUsage(updatedAircraftUsage);
-};
-
-export const _checkAircraftUsage = (flightPath?: Flight[]): number => {
-  if (flightPath?.length) {
-    let totalSecondsInFlightPath = 0;
-    for (let index = 0; index < flightPath.length; index++) {
-      const { arrivalTime: endInSecs, departureTime: startInSecs } = flightPath[index];
-      totalSecondsInFlightPath += determinePercentageOfWhole(startInSecs, endInSecs);
-    }
-    return Math.round(totalSecondsInFlightPath);
-  }
-
-  return 0;
 };

@@ -1,6 +1,7 @@
 import flights from 'api/flights.json';
-import * as module from 'providers/actions/flight_path';
+import * as mod from 'providers/actions/flight_path';
 import { Flight } from 'types';
+import * as utils from 'utils/checkAircraftUsage';
 
 describe('flight path actions', () => {
   describe('addToFlightPath', () => {
@@ -36,7 +37,7 @@ describe('flight path actions', () => {
       };
       const setActiveFlight = jest.fn();
       const setFlightPath = jest.fn();
-      module.addToFlightPath(
+      mod.addToFlightPath(
         flightPath, nextFlight, setActiveFlight, setFlightPath, flightPath[1]
       );
       expect(setFlightPath).toHaveBeenCalledWith([...flightPath, nextFlight]);
@@ -56,7 +57,7 @@ describe('flight path actions', () => {
       };
       const setActiveFlight = jest.fn();
       const setFlightPath = jest.fn();
-      module.addToFlightPath(
+      mod.addToFlightPath(
         flightPath, nextFlight, setActiveFlight, setFlightPath, undefined
       );
       expect(setFlightPath).toHaveBeenCalledWith([nextFlight]);
@@ -97,7 +98,7 @@ describe('flight path actions', () => {
       const setFlightPath = jest.fn();
       let errorMessage = '';
       try {
-        module.addToFlightPath(
+        mod.addToFlightPath(
           flightPath, nextFlight, setActiveFlight, setFlightPath, flights[10]
         );
       } catch (exception: any) {
@@ -150,7 +151,7 @@ describe('flight path actions', () => {
         readableArrival: '12:05',
         readableDeparture: '10:30',
       };
-      module.removeFromFlightPath(
+      mod.removeFromFlightPath(
         flightId, flightPath, setActiveFlight, setFlightPath, activeFlight,
       );
       expect(setFlightPath).toHaveBeenCalledWith(flightPath.filter(x => x.ident !== flightId));
@@ -199,7 +200,7 @@ describe('flight path actions', () => {
         readableArrival: '12:05',
         readableDeparture: '10:30',
       };
-      module.removeFromFlightPath(
+      mod.removeFromFlightPath(
         flightId, flightPath, setActiveFlight, setFlightPath, activeFlight,
       );
       expect(setFlightPath).toHaveBeenCalledWith(flightPath.filter(x => x.ident !== flightId));
@@ -239,7 +240,7 @@ describe('flight path actions', () => {
       ];
       const setActiveFlight = jest.fn();
       const setFlightPath = jest.fn();
-      module.removeFromFlightPath(
+      mod.removeFromFlightPath(
         flightId, flightPath, setActiveFlight, setFlightPath, undefined,
       );
       expect(setFlightPath).toHaveBeenCalledWith(flightPath.filter(x => x.ident !== flightId));
@@ -247,95 +248,63 @@ describe('flight path actions', () => {
     });
 
     describe('updateFlightPathData', () => {
-      it('progresses as expected, checking for earlier flights and updating aircraft usage', () => {
-        const flightPath = [
-          {
-            arrivalTime: 43500,
-            departureTime: 37800,
-            destination: 'LIRF',
-            ident: 'AS1343',
-            origin: 'LSGG',
-            readableArrival: '12:05',
-            readableDeparture: '10:30',
-          }
-        ];
-        const flights = [
-          {
-            arrivalTime: 23400,
-            departureTime: 18600,
-            destination: 'LIPZ',
-            ident: 'AS1327',
-            origin: 'LSGG',
-            readableArrival: '06:30',
-            readableDeparture: '05:10',
-          },
-          {
-            arrivalTime: 30300,
-            departureTime: 25500,
-            destination: 'LSGG',
-            ident: 'AS1328',
-            origin: 'LIPZ',
-            readableArrival: '08:25',
-            readableDeparture: '07:05',
-          },
-          {
-            arrivalTime: 43500,
-            departureTime: 37800,
-            destination: 'LIRF',
-            ident: 'AS1343',
-            origin: 'LSGG',
-            readableArrival: '12:05',
-            readableDeparture: '10:30',
-          }
-        ];
-        const setEarlierFlightsAvailable = jest.fn();
-        const setAircraftUsage = jest.fn(() => true);
-        module.updateFlightPathData(
-          flightPath, flights, setEarlierFlightsAvailable, setAircraftUsage,
+      fit('progresses as expected, checking for earlier flights and updating aircraft usage', () => {
+        const expectedAircraftUsage = 5;
+        const spy = jest.spyOn(utils, 'checkAircraftUsage').mockImplementation(
+          () => expectedAircraftUsage
         );
-        expect(setEarlierFlightsAvailable).toHaveBeenCalledWith(true);
-        expect(setAircraftUsage).toHaveBeenCalledTimes(1);
-      });
-    });
-
-    describe('_checkAircraftUsage', () => {
-      it('returns 0 if the flight path is empty', () => {
-        const actual = module._checkAircraftUsage([] as Flight[]);
-        expect(actual).toBe(0);
-      });
-
-      it('adds up flight durations to get total aircraft usage given flight path', () => {
-        const flightPath = [
-          {
-            arrivalTime: 23400,
-            departureTime: 18600,
-            destination: 'LIPZ',
-            ident: 'AS1327',
-            origin: 'LSGG',
-            readableArrival: '06:30',
-            readableDeparture: '05:10',
-          },
-          {
-            arrivalTime: 30300,
-            departureTime: 25500,
-            destination: 'LSGG',
-            ident: 'AS1328',
-            origin: 'LIPZ',
-            readableArrival: '08:25',
-            readableDeparture: '07:05',
-          },
-          {
-            arrivalTime: 43500,
-            departureTime: 37800,
-            destination: 'LIRF',
-            ident: 'AS1343',
-            origin: 'LSGG',
-            readableArrival: '12:05',
-            readableDeparture: '10:30',
-          }
-        ];
-        const actual = module._checkAircraftUsage(flightPath);
-        expect(actual).toBe(18);
+        try {
+          const flightPath = [
+            {
+              arrivalTime: 43500,
+              departureTime: 37800,
+              destination: 'LIRF',
+              ident: 'AS1343',
+              origin: 'LSGG',
+              readableArrival: '12:05',
+              readableDeparture: '10:30',
+            }
+          ];
+          const flights = [
+            {
+              arrivalTime: 23400,
+              departureTime: 18600,
+              destination: 'LIPZ',
+              ident: 'AS1327',
+              origin: 'LSGG',
+              readableArrival: '06:30',
+              readableDeparture: '05:10',
+            },
+            {
+              arrivalTime: 30300,
+              departureTime: 25500,
+              destination: 'LSGG',
+              ident: 'AS1328',
+              origin: 'LIPZ',
+              readableArrival: '08:25',
+              readableDeparture: '07:05',
+            },
+            {
+              arrivalTime: 43500,
+              departureTime: 37800,
+              destination: 'LIRF',
+              ident: 'AS1343',
+              origin: 'LSGG',
+              readableArrival: '12:05',
+              readableDeparture: '10:30',
+            }
+          ];
+          const setEarlierFlightsAvailable = jest.fn();
+          const setAircraftUsage = jest.fn(() => true);
+          mod.updateFlightPathData(
+            flightPath, flights, setEarlierFlightsAvailable, setAircraftUsage,
+          );
+          expect(setEarlierFlightsAvailable).toHaveBeenCalledWith(true);
+          expect(spy).toHaveBeenCalledWith(flightPath);
+          expect(setAircraftUsage).toHaveBeenCalledWith(expectedAircraftUsage);
+        } finally {
+          spy.mockRestore();
+        }
       });
     });
   });

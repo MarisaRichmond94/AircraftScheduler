@@ -1,12 +1,5 @@
-import produce from 'immer';
-
-import { settings } from 'settings';
 import { Flight } from 'types';
-
-interface FlightFilter {
-  timestamp: number,
-  location: string,
-};
+import { filterFlights } from 'utils/filterFlights';
 
 export const calculateValidFlights = (
   currFlightPath: Flight[],
@@ -35,7 +28,7 @@ export const calculateValidFlights = (
       location: currFlightPath[nextActiveFlightIndex].destination,
     };
   }
-  setValidFlights(_filterFlights(flights, start, end));
+  setValidFlights(filterFlights(flights, start, end));
 };
 
 export const checkEarlierFlightsAvailable = (
@@ -44,32 +37,8 @@ export const checkEarlierFlightsAvailable = (
 ): boolean => {
   if (flights) {
     const { departureTime: timestamp, origin: location } = startingFlight;
-    return !!(_filterFlights(flights, undefined, { timestamp, location}).length);
+    return !!(filterFlights(flights, undefined, { timestamp, location}).length);
   }
 
   return false;
-};
-
-export const _filterFlights = (
-  flights?: Flight[],
-  start?: FlightFilter,
-  end?: FlightFilter,
-): Flight[] => {
-  if (flights) {
-    return produce<Flight[]>(flights, draft => {
-      if (start) {
-        return draft.filter(x =>
-            x.origin === start.location &&
-            x.departureTime > (start.timestamp + settings.REQUIRED_DOWNTIME_IN_SECS),
-        );
-      } else if (end) {
-        return draft.filter(x =>
-          x.destination === end.location &&
-          (x.arrivalTime + settings.REQUIRED_DOWNTIME_IN_SECS) < end.timestamp,
-        );
-      }
-    });
-  }
-
-  return [];
 };

@@ -1,0 +1,12 @@
+@import 'global';
+
+#error-page {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: $large-padding;
+
+  h1 { text-align: center; }
+  img { height: 70vh; }
+};

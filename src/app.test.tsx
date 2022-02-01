@@ -1,8 +1,7 @@
 import moment from 'moment';
-import { screen } from '@testing-library/react';
 
 import App from 'app';
-import { render } from 'test_utils';
+import { render, screen } from 'test_utils';
 
 describe('Base app component', () => {
   it('should load page with correct initial state', () => {
